@@ -1,95 +1,119 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import { KeyboardEvent, useEffect, useState, useMemo } from "react";
+import { TickerStatus } from "@/common/apis/interfaces";
+import { css } from "@linaria/core";
+import TickerSearch from "@/components/TickerSearch/TickerSearch";
+import Spinner from "@/components/Spinner/Spinner";
+import StockDetails from "@/components/StockDetails/StockDetails";
+import Chart from "@/components/Chart/Chart";
+import debounce from "lodash.debounce";
+
+const App = () => {
+  const [tickerStatus, setTickerStatus] = useState<TickerStatus>(null);
+  const [tickerSymbol, setTickerSymbol] = useState("");
+
+  /*
+  if (stocList) {
+    simplifiedStockList = stocList.map(({ description, displaySymbol }) => ({
+      description,
+      displaySymbol,
+    }));
+  }
+
+   useEffect(() => {
+    (async () => {
+      const stocks = await getStocks();
+      if (stocks) {
+        setStockList(stocks?.data);
+      }
+    })();
+  }, []);*/
+
+  const onButtonInput = (event: KeyboardEvent<HTMLInputElement>) => {
+    const input = event.target as HTMLInputElement;
+    console.log(input.value);
+  };
+
+  const debouncedChangeHandler = useMemo(
+    () => debounce(onButtonInput, 1000),
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedChangeHandler.cancel();
+    };
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <>
+      <div className={banner} />
+      <div className={container}>
+        <div className="searchContainer">
+          <TickerSearch
+            tickerSymbol={tickerSymbol}
+            onChange={debouncedChangeHandler}
+          />
+          {tickerStatus === "valid" && (
+            <StockDetails
+              displaySymbol={tickerSymbol}
+              companyName="Microsoft"
             />
-          </a>
+          )}
+        </div>
+        <div className="chartContainer">
+          {tickerStatus === "valid" && <Chart tickerSymbol={tickerSymbol} />}
         </div>
       </div>
+    </>
+  );
+};
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+const banner = css`
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 78%
+  );
+  margin: -8px -80px 0;
+  height: 85px;
+`;
 
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+const container = css`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+  @media (min-width: 1040px) {
+    flex-direction: row;
+  }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+  h3 {
+    font-size: 2rem;
+  }
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+  .searchContainer {
+    width: 100%;
+    padding: 20px 40px;
+
+    @media (min-width: 1040px) {
+      border-right: 2px solid gray;
+      width: 50%;
+    }
+  }
+
+  .chartContainer {
+    padding: 65px 0 0 40px;
+    width: 100%;
+
+    @media (min-width: 1040px) {
+      width: 50%;
+    }
+  }
+`;
+
+export default App;

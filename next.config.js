@@ -1,4 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {}
+const withLinaria = require("next-with-linaria");
 
-module.exports = nextConfig
+/** @type {import('next-with-linaria').LinariaConfig} */
+const config = {
+  experimental: {
+    appDir: true,
+  },
+};
+module.exports = withLinaria(config);
