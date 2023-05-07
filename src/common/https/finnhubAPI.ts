@@ -3,8 +3,6 @@ import { DetaildStock, StockQuote, StockCandle } from "@/common/interfaces";
 
 const urlBase = "https://finnhub.io/api/v1";
 
-const apiToken = "ch91ge9r01qtgm5dtld0ch91ge9r01qtgm5dtldg";
-
 const finnHubClient = axios.create({
   baseURL: urlBase,
   timeout: 3000,
@@ -12,13 +10,17 @@ const finnHubClient = axios.create({
 
 export const getStocks = () =>
   finnHubClient
-    .get<DetaildStock>(`/stock/symbol?exchange=US&token=${apiToken}`)
+    .get<DetaildStock>(
+      `/stock/symbol?exchange=US&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
+    )
     .then((response) => response.data)
     .catch((error) => error.response.status);
 
 export const getStockQuote = (stockTicker: string) =>
   finnHubClient
-    .get<StockQuote>(`/quote?symbol=${stockTicker}&token=${apiToken}`)
+    .get<StockQuote>(
+      `/quote?symbol=${stockTicker}&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
+    )
     .then((response) => response.data);
 
 export const getStockChart = (stockTicker: string, resolution: string) => {
@@ -29,7 +31,7 @@ export const getStockChart = (stockTicker: string, resolution: string) => {
 
   return finnHubClient
     .get<StockCandle>(
-      `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${apiToken}`
+      `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
     )
     .then((response) => response.data);
 };

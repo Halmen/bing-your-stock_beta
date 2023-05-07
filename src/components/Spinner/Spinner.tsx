@@ -11,13 +11,13 @@ const Spinner = ({ className }: Props) => (
       src="/infinite-loading-spinner.png"
       width={150}
       height={150}
-      className={spinner}
+      className={spinnerCSS}
       alt="Loading...."
     />
   </div>
 );
 
-const spinner = css`
+const spinnerCSS = css`
   animation: spin 2s linear infinite;
   width: inherit;
   height: inherit;

@@ -31,8 +31,8 @@ const StockDetails = ({
 
   return (
     <>
-      <p className={symbol}>{displaySymbol}</p>
-      <div className={stockContainer}>
+      <p className={symbolCSS}>{displaySymbol}</p>
+      <div className={stockContainerCSS}>
         <div className="description">
           <p className="name">{companyName}</p>
           <h2 className="currentPrice">{`${data?.c} ${currency}`}</h2>
@@ -52,12 +52,12 @@ const StockDetails = ({
   );
 };
 
-const symbol = css`
+const symbolCSS = css`
   font-size: 1.5rem;
   line-height: 0.125rem;
 `;
 
-const stockContainer = css`
+const stockContainerCSS = css`
   display: flex;
   flex-direction: column;
   max-width: 700px;

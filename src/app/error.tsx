@@ -14,7 +14,7 @@ const ErrorCard = ({ error, children }: Props) => {
   }, [error]);
 
   return (
-    <div className={errorCard}>
+    <div className={errorCardCSS}>
       <p className="errorText">
         Something went wrong, keep calm and carry on...
       </p>
@@ -25,7 +25,7 @@ const ErrorCard = ({ error, children }: Props) => {
   );
 };
 
-const errorCard = css`
+const errorCardCSS = css`
   border-radius: 10px;
   border: 2px solid rgb(178, 7, 7);
   width: calc(100% - 40px);

@@ -64,7 +64,7 @@ const App = () => {
 
   return (
     <>
-      <div className={container}>
+      <div className={containerCSS}>
         <div className="searchContainer">
           <TickerSearch
             onChange={debouncedChangeHandler}
@@ -72,7 +72,7 @@ const App = () => {
           />
           {stockInfo && (
             <ErrorBoundary fallback={<ErrorCard />}>
-              <Suspense fallback={<Spinner className={stockSpinner} />}>
+              <Suspense fallback={<Spinner className={stockSpinnerCSS} />}>
                 <StockDetails
                   displaySymbol={stockInfo.displaySymbol}
                   companyName={stockInfo.companyName}
@@ -85,7 +85,7 @@ const App = () => {
         <div className="chartContainer">
           {stockInfo && (
             <ErrorBoundary fallback={<ErrorCard />}>
-              <Suspense fallback={<Spinner className={chartSpinner} />}>
+              <Suspense fallback={<Spinner className={chartSpinnerCSS} />}>
                 <Chart
                   displaySymbol={stockInfo.displaySymbol}
                   companyName={stockInfo.companyName}
@@ -99,17 +99,17 @@ const App = () => {
   );
 };
 
-const stockSpinner = css`
+const stockSpinnerCSS = css`
   margin: 50px auto;
   width: 122px;
 `;
 
-const chartSpinner = css`
+const chartSpinnerCSS = css`
   text-align: center;
   margin-top: 150px;
 `;
 
-const container = css`
+const containerCSS = css`
   width: 100%;
   height: calc(100vh - 119px);
   display: flex;

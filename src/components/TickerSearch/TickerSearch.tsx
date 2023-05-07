@@ -9,7 +9,7 @@ interface Props {
 const TickerSearch = ({ onChange = () => null, tickerStatus }: Props) => (
   <>
     <h3>Enter Ticker Symbol</h3>
-    <div className={inputContainer}>
+    <div className={inputContainerCSS}>
       <input
         className="tickerInput"
         placeholder="Enter a valid ticker symbol"
@@ -20,7 +20,7 @@ const TickerSearch = ({ onChange = () => null, tickerStatus }: Props) => (
   </>
 );
 
-const inputContainer = css`
+const inputContainerCSS = css`
   height: 120px;
 
   .tickerInput {
