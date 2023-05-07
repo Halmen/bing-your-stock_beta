@@ -1,47 +1,51 @@
-import ErrorCard from "@/components/ErrorCard/ErrorCard";
+import { Stock } from "@/common/interfaces";
+import useSWR from "swr";
+import { getStockQuote } from "@/common/https/finnhubAPI";
 import { css } from "@linaria/core";
 
-interface Props {
-  displaySymbol: string;
-  companyName: string;
+interface Props extends Stock {
   currency?: string;
-  error?: string;
 }
+
+const stats = {
+  pc: "Previous Close:",
+  o: "Todays Open:",
+  h: "Todays High:",
+  l: "Todays Low:",
+};
 
 const StockDetails = ({
   displaySymbol,
   companyName,
   currency = "USD",
-  error,
 }: Props) => {
-  const stockValues = [{ stat: "", value: "" }];
-  const price = 654.64;
+  const { data } = useSWR(
+    `finnhub/quote/${displaySymbol}`,
+    () => getStockQuote(displaySymbol),
+    {
+      suspense: true,
+    }
+  );
 
   return (
     <>
-      {error ? (
-        <ErrorCard />
-      ) : (
-        <>
-          <p className={symbol}>{displaySymbol}</p>
-          <div className={stockContainer}>
-            <div className="description">
-              <div>
-                <p className="name">{companyName}</p>
-              </div>
-              <h2 className="currentPrice">{`${price} ${currency}`}</h2>
-            </div>
-            <div>
-              {stockValues.map(({ stat, value }) => (
-                <div className="stockValues" key={stat}>
-                  <p className="key">{stat}</p>
-                  <p className="value">{`${value} ${currency}`}</p>
-                </div>
-              ))}
-            </div>
+      <p className={symbol}>{displaySymbol}</p>
+      <div className={stockContainer}>
+        <div className="description">
+          <div>
+            <p className="name">{companyName}</p>
           </div>
-        </>
-      )}
+          <h2 className="currentPrice">{`${data?.c} ${currency}`}</h2>
+        </div>
+        <div>
+          {["pc", "o", "h", "l"].map((stat: string) => (
+            <div className="stockValues" key={stat}>
+              <p className="key">{stats[stat as keyof typeof stats]}</p>
+              <p className="value">{`${data[stat]} ${currency}`}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 };

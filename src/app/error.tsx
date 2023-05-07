@@ -1,22 +1,29 @@
+"use client";
 import { ReactNode } from "react";
 import { css } from "@linaria/core";
+import { useEffect } from "react";
 
 interface Props {
-  message?: string;
+  error?: Error;
   children?: ReactNode;
 }
 
-const ErrorCard = ({
-  message = "Something went wrong, keep calm and carry on...",
-  children,
-}: Props) => (
-  <div className={errorCard}>
-    {children || <p className="errorText">{message}</p>}
-    <button className="refreshButton" onClick={() => location.reload()}>
-      Try Again
-    </button>
-  </div>
-);
+const ErrorCard = ({ error, children }: Props) => {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <div className={errorCard}>
+      <p className="errorText">
+        Something went wrong, keep calm and carry on...
+      </p>
+      <button className="refreshButton" onClick={() => location.reload()}>
+        Try Again
+      </button>
+    </div>
+  );
+};
 
 const errorCard = css`
   border-radius: 10px;

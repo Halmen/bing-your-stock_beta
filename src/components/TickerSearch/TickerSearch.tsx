@@ -1,19 +1,13 @@
-import { TickerStatus } from "@/common/apis/interfaces";
+"use client";
 import { KeyboardEvent, useState } from "react";
 import { css } from "@linaria/core";
 
 interface Props {
-  tickerSymbol: string;
   onChange: (event: KeyboardEvent<HTMLInputElement>) => void;
-  tickerStatus?: TickerStatus;
-  error?: string;
+  tickerStatus: string;
 }
 
-const TickerSearch = ({
-  tickerSymbol = "",
-  onChange = () => null,
-  tickerStatus,
-}: Props) => (
+const TickerSearch = ({ onChange = () => null, tickerStatus }: Props) => (
   <>
     <h3>Enter Ticker Symbol</h3>
     <div className={inputContainer}>
@@ -22,9 +16,7 @@ const TickerSearch = ({
         placeholder="Enter a valid ticker symbol"
         onKeyDown={(event) => onChange(event)}
       />
-      {tickerSymbol.length > 0 && tickerStatus === "invalid" && (
-        <p className="invalidText">Ticker symbol is invalid</p>
-      )}
+      {tickerStatus && <p className="invalidText">{tickerStatus}</p>}
     </div>
   </>
 );
@@ -53,6 +45,7 @@ const inputContainer = css`
 
   .invalidText {
     font-size: 1.5rem;
+    line-height: 0.75rem;
     color: red;
   }
 `;

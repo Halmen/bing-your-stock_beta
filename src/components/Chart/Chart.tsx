@@ -1,7 +1,12 @@
+"use client";
 import ReactApexChart from "react-apexcharts";
-import { useState } from "react";
+import useSWR from "swr";
 import { ApexOptions } from "apexcharts";
-import ErrorCard from "../ErrorCard/ErrorCard";
+import { getStockChart } from "@/common/https/finnhubAPI";
+import { Stock } from "@/common/interfaces";
+
+
+const transformData = () => ();
 
 const getOptions = (chartName: string): ApexOptions => ({
   chart: {
@@ -23,7 +28,7 @@ const getOptions = (chartName: string): ApexOptions => ({
   },
 });
 
-const series = [
+const seriess = [
   {
     data: [
       {
@@ -34,23 +39,27 @@ const series = [
   },
 ];
 
-interface Props {
-  chartName: string;
-  tickerSymbol: string;
-}
-
 const Chart = ({
-  chartName = "Tibor's Crypto Scheme",
-  tickerSymbol,
-}: Props) => {
-  const [error, setError] = useState("");
+  companyName = "Tibor's Crypto Scheme",
+  displaySymbol,
+}: Stock) => {
+  const { data } = useSWR(
+    `finnhub/chart/${displaySymbol}`,
+    () => getStockChart(displaySymbol, "D"),
+    {
+      suspense: true,
+      refreshInterval: 3660000,
+      revalidateOnMount: true,
+    }
+  );
+  const lengthOfData
+ const series = 
   return (
     <>
-      {error ? (
-        <ErrorCard message={error} />
-      ) : (
+      {data?.s === "no_data" && <p>Sorry no data avaiable</p>}
+      {data?.s === "ok" && (
         <ReactApexChart
-          options={getOptions(chartName)}
+          options={getOptions(companyName)}
           series={series}
           type="candlestick"
           height={500}

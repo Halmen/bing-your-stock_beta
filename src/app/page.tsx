@@ -1,42 +1,57 @@
 "use client";
-
-import { KeyboardEvent, useEffect, useState, useMemo } from "react";
-import { TickerStatus } from "@/common/apis/interfaces";
+import {
+  KeyboardEvent,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  Suspense,
+} from "react";
+import { Stock } from "@/common/interfaces";
 import { css } from "@linaria/core";
 import TickerSearch from "@/components/TickerSearch/TickerSearch";
 import Spinner from "@/components/Spinner/Spinner";
+import ErrorCard from "@/app/error";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import StockDetails from "@/components/StockDetails/StockDetails";
 import Chart from "@/components/Chart/Chart";
+import { verifyStock } from "@/common/https/nextAPI";
 import debounce from "lodash.debounce";
 
 const App = () => {
-  const [tickerStatus, setTickerStatus] = useState<TickerStatus>(null);
-  const [tickerSymbol, setTickerSymbol] = useState("");
+  const [tickerStatus, setTickerStatus] = useState("");
+  const [stockInfo, setStockInfo] = useState<Stock | null>(null);
 
-  /*
-  if (stocList) {
-    simplifiedStockList = stocList.map(({ description, displaySymbol }) => ({
-      description,
-      displaySymbol,
-    }));
-  }
+  const onButtonInput = useCallback(
+    async (event: KeyboardEvent<HTMLInputElement>) => {
+      const input = event.target as HTMLInputElement;
+      const value = input.value;
+      const isLetterNumber =
+        event.key.length == 1 && /^[A-Za-z0-9]*$/.test(event.key);
+      const isEnter = event.key === "Enter";
+      const isBackspace = event.key === "Backspace";
+      if (!value.length) {
+        setTickerStatus("");
+        setStockInfo(null);
+      } else if (isLetterNumber || isBackspace || isEnter) {
+        const { data } = await verifyStock(value.toUpperCase().trim());
 
-   useEffect(() => {
-    (async () => {
-      const stocks = await getStocks();
-      if (stocks) {
-        setStockList(stocks?.data);
+        if (data?.error) {
+          setTickerStatus(data.error);
+        } else {
+          setStockInfo({
+            displaySymbol: data.displaySymbol,
+            companyName: data.companyName,
+          });
+        }
       }
-    })();
-  }, []);*/
-
-  const onButtonInput = (event: KeyboardEvent<HTMLInputElement>) => {
-    const input = event.target as HTMLInputElement;
-    console.log(input.value);
-  };
+    },
+    []
+  );
 
   const debouncedChangeHandler = useMemo(
     () => debounce(onButtonInput, 1000),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -52,18 +67,31 @@ const App = () => {
       <div className={container}>
         <div className="searchContainer">
           <TickerSearch
-            tickerSymbol={tickerSymbol}
             onChange={debouncedChangeHandler}
+            tickerStatus={tickerStatus}
           />
-          {tickerStatus === "valid" && (
-            <StockDetails
-              displaySymbol={tickerSymbol}
-              companyName="Microsoft"
-            />
+          {stockInfo && (
+            <ErrorBoundary fallback={<ErrorCard />}>
+              <Suspense fallback={<Spinner />}>
+                <StockDetails
+                  displaySymbol={stockInfo.displaySymbol}
+                  companyName={stockInfo.companyName}
+                />
+              </Suspense>
+            </ErrorBoundary>
           )}
         </div>
         <div className="chartContainer">
-          {tickerStatus === "valid" && <Chart tickerSymbol={tickerSymbol} />}
+          {stockInfo && (
+            <ErrorBoundary fallback={<ErrorCard />}>
+              <Suspense fallback={<Spinner />}>
+                <Chart
+                  displaySymbol={stockInfo.displaySymbol}
+                  companyName={stockInfo.companyName}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          )}
         </div>
       </div>
     </>
@@ -78,13 +106,13 @@ const banner = css`
     rgba(9, 9, 121, 1) 35%,
     rgba(0, 212, 255, 1) 78%
   );
-  margin: -8px -80px 0;
+  margin: -8px -8px 0;
   height: 85px;
 `;
 
 const container = css`
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 119px);
   display: flex;
   flex-direction: column;
 
