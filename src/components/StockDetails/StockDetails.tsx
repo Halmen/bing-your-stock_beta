@@ -24,7 +24,7 @@ const StockDetails = ({
     () => getStockQuote(displaySymbol),
     {
       suspense: true,
-      refreshInterval: 300000, // re-fetch data every 30s just make sure no to time out the sever
+      refreshInterval: 15000, // re-fetch data every 15s, just to make sure no to time out on the sever
       revalidateOnMount: true,
     }
   );
@@ -41,7 +41,9 @@ const StockDetails = ({
           {["pc", "o", "h", "l"].map((stat: string) => (
             <div className="stockValues" key={stat}>
               <p className="key">{stats[stat as keyof typeof stats]}</p>
-              <p className="value">{`${data[stat]} ${currency}`}</p>
+              <p className="value">{`${
+                data[stat as keyof typeof data]
+              } ${currency}`}</p>
             </div>
           ))}
         </div>

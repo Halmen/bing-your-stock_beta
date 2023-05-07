@@ -1,4 +1,3 @@
-"use client";
 import { KeyboardEvent } from "react";
 import { css } from "@linaria/core";
 

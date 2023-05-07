@@ -1,8 +1,6 @@
-"use client";
-
 import useSWR from "swr";
 import { getStockChart } from "@/common/https/finnhubAPI";
-import { Stock } from "@/common/interfaces";
+import { Stock, StockCandle } from "@/common/interfaces";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 
@@ -10,11 +8,7 @@ const ReactApexCharts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-interface Candles {
-  [key: string]: number[] | string;
-}
-
-const transformData = (rawData: Candles) => {
+const transformData = (rawData: StockCandle) => {
   if (rawData?.s === "no_data") {
     return [
       {

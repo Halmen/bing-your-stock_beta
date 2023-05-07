@@ -1,5 +1,11 @@
 import axios from "axios";
 
+interface StockVerify {
+  error?: string;
+  displaySymbol?: string;
+  companyName?: string;
+}
+
 const urlBase = "http://localhost:3000/api";
 
 const NextApiClient = axios.create({
@@ -7,13 +13,7 @@ const NextApiClient = axios.create({
   timeout: 3000,
 });
 
-export const verifyStock = (
-  tickeSymbol: string
-): Promise<{ data: string } | { error: string }> =>
-  NextApiClient.get(`/stock-verify?ticker=${tickeSymbol}`)
-    .then((response) => ({
-      data: response.data,
-    }))
-    .catch((error) => ({
-      error: error,
-    }));
+export const verifyStock = (tickeSymbol: string) =>
+  NextApiClient.get<StockVerify>(`/stock-verify?ticker=${tickeSymbol}`)
+    .then((response) => response.data)
+    .catch((error) => console.log(error));

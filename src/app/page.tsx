@@ -35,10 +35,10 @@ const App = () => {
         setStockInfo(null);
       } else if (isLetterNumber || isBackspace || isEnter) {
         setTickerStatus("Loading...");
-        const { data } = await verifyStock(value.toUpperCase().trim());
+        const data = await verifyStock(value.toUpperCase().trim());
         if (data?.error) {
           setTickerStatus(data.error);
-        } else {
+        } else if (data?.displaySymbol && data?.companyName) {
           setStockInfo({
             displaySymbol: data.displaySymbol,
             companyName: data.companyName,
