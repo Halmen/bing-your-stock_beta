@@ -34,8 +34,8 @@ const App = () => {
         setTickerStatus("");
         setStockInfo(null);
       } else if (isLetterNumber || isBackspace || isEnter) {
+        setTickerStatus("Loading...");
         const { data } = await verifyStock(value.toUpperCase().trim());
-
         if (data?.error) {
           setTickerStatus(data.error);
         } else {
@@ -43,6 +43,7 @@ const App = () => {
             displaySymbol: data.displaySymbol,
             companyName: data.companyName,
           });
+          setTickerStatus("");
         }
       }
     },
@@ -50,7 +51,7 @@ const App = () => {
   );
 
   const debouncedChangeHandler = useMemo(
-    () => debounce(onButtonInput, 1000),
+    () => debounce(onButtonInput, 500),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -63,7 +64,6 @@ const App = () => {
 
   return (
     <>
-      <div className={banner} />
       <div className={container}>
         <div className="searchContainer">
           <TickerSearch
@@ -72,7 +72,7 @@ const App = () => {
           />
           {stockInfo && (
             <ErrorBoundary fallback={<ErrorCard />}>
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<Spinner className={stockSpinner} />}>
                 <StockDetails
                   displaySymbol={stockInfo.displaySymbol}
                   companyName={stockInfo.companyName}
@@ -81,10 +81,11 @@ const App = () => {
             </ErrorBoundary>
           )}
         </div>
+        <div className="border" />
         <div className="chartContainer">
           {stockInfo && (
             <ErrorBoundary fallback={<ErrorCard />}>
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<Spinner className={chartSpinner} />}>
                 <Chart
                   displaySymbol={stockInfo.displaySymbol}
                   companyName={stockInfo.companyName}
@@ -98,16 +99,14 @@ const App = () => {
   );
 };
 
-const banner = css`
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(9, 9, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 78%
-  );
-  margin: -8px -8px 0;
-  height: 85px;
+const stockSpinner = css`
+  margin: 50px auto;
+  width: 122px;
+`;
+
+const chartSpinner = css`
+  text-align: center;
+  margin-top: 150px;
 `;
 
 const container = css`
@@ -116,7 +115,7 @@ const container = css`
   display: flex;
   flex-direction: column;
 
-  @media (min-width: 1040px) {
+  @media (min-width: 1350px) {
     flex-direction: row;
   }
 
@@ -128,9 +127,20 @@ const container = css`
     width: 100%;
     padding: 20px 40px;
 
-    @media (min-width: 1040px) {
-      border-right: 2px solid gray;
+    @media (min-width: 1350px) {
       width: 50%;
+    }
+  }
+
+  .border {
+    display: none;
+
+    @media (min-width: 1350px) {
+      display: block;
+      width: 2px;
+      background-color: gray;
+      height: 100vh- 119px;
+      margin-bottom: -34px;
     }
   }
 
@@ -138,7 +148,7 @@ const container = css`
     padding: 65px 0 0 40px;
     width: 100%;
 
-    @media (min-width: 1040px) {
+    @media (min-width: 1350px) {
       width: 50%;
     }
   }

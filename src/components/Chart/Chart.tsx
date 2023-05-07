@@ -1,12 +1,40 @@
 "use client";
-import ReactApexChart from "react-apexcharts";
+
 import useSWR from "swr";
-import { ApexOptions } from "apexcharts";
 import { getStockChart } from "@/common/https/finnhubAPI";
 import { Stock } from "@/common/interfaces";
+import dynamic from "next/dynamic";
+import { ApexOptions } from "apexcharts";
 
+const ReactApexCharts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
-const transformData = () => ();
+interface Candles {
+  [key: string]: number[] | string;
+}
+
+const transformData = (rawData: Candles) => {
+  if (rawData?.s === "no_data") {
+    return [
+      {
+        data: [],
+      },
+    ];
+  }
+
+  return [
+    {
+      data: [...Array(rawData?.c?.length)].map((_, index) => [
+        rawData?.t[index],
+        rawData?.o[index],
+        rawData?.h[index],
+        rawData?.l[index],
+        rawData.c[index],
+      ]),
+    },
+  ];
+};
 
 const getOptions = (chartName: string): ApexOptions => ({
   chart: {
@@ -26,45 +54,44 @@ const getOptions = (chartName: string): ApexOptions => ({
       enabled: true,
     },
   },
+  noData: {
+    text: "No data, try again later",
+    align: "center",
+    verticalAlign: "middle",
+    style: {
+      color: "#5555bf",
+      fontSize: "1.5rem",
+      fontFamily: "Franklin Gothic Medium",
+    },
+  },
 });
 
-const seriess = [
-  {
-    data: [
-      {
-        x: new Date(1538778600000),
-        y: [6629.81, 6650.5, 6623.04, 6633.33],
-      },
-    ],
-  },
-];
+interface Props extends Stock {
+  resolution?: "1" | "5" | "15" | "30" | "60" | "D" | "W" | "M";
+}
 
 const Chart = ({
   companyName = "Tibor's Crypto Scheme",
   displaySymbol,
-}: Stock) => {
+  resolution = "D",
+}: Props) => {
   const { data } = useSWR(
     `finnhub/chart/${displaySymbol}`,
-    () => getStockChart(displaySymbol, "D"),
+    () => getStockChart(displaySymbol, resolution),
     {
       suspense: true,
-      refreshInterval: 3660000,
-      revalidateOnMount: true,
+      refreshInterval: 43200000, //revalidates the daily chart, every 12h
     }
   );
-  const lengthOfData
- const series = 
+
   return (
     <>
-      {data?.s === "no_data" && <p>Sorry no data avaiable</p>}
-      {data?.s === "ok" && (
-        <ReactApexChart
-          options={getOptions(companyName)}
-          series={series}
-          type="candlestick"
-          height={500}
-        />
-      )}
+      <ReactApexCharts
+        options={getOptions(companyName)}
+        series={transformData(data)}
+        type="candlestick"
+        height={500}
+      />
     </>
   );
 };

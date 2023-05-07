@@ -1,14 +1,20 @@
 import { css } from "@linaria/core";
 import Image from "next/image";
 
-const Spinner = () => (
-  <Image
-    src="/infinite-loading-spinner.png"
-    width={150}
-    height={150}
-    className={spinner}
-    alt="Loading...."
-  />
+interface Props {
+  className?: string;
+}
+
+const Spinner = ({ className }: Props) => (
+  <div className={className}>
+    <Image
+      src="/infinite-loading-spinner.png"
+      width={150}
+      height={150}
+      className={spinner}
+      alt="Loading...."
+    />
+  </div>
 );
 
 const spinner = css`

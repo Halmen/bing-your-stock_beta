@@ -24,6 +24,8 @@ const StockDetails = ({
     () => getStockQuote(displaySymbol),
     {
       suspense: true,
+      refreshInterval: 300000, // re-fetch data every 30s just make sure no to time out the sever
+      revalidateOnMount: true,
     }
   );
 
@@ -32,9 +34,7 @@ const StockDetails = ({
       <p className={symbol}>{displaySymbol}</p>
       <div className={stockContainer}>
         <div className="description">
-          <div>
-            <p className="name">{companyName}</p>
-          </div>
+          <p className="name">{companyName}</p>
           <h2 className="currentPrice">{`${data?.c} ${currency}`}</h2>
         </div>
         <div>
@@ -59,27 +59,21 @@ const stockContainer = css`
   display: flex;
   flex-direction: column;
   max-width: 700px;
+  gap: 35px;
   width: 100%;
 
-  @media (min-width: 540px) {
+  @media (min-width: 650px) {
     justify-content: space-between;
     flex-direction: row;
+    max-width: unset;
   }
 
   .description {
     height: fit-content;
-    margin-bottom: 35px;
-    display: flex;
     justify-content: space-between;
-
-    @media (min-width: 540px) {
-      display: block;
-      margin-bottom: 0;
-    }
 
     .name {
       font-size: 2rem;
-      line-height: 0.125rem;
     }
 
     .currentPrice {

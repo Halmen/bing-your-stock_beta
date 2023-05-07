@@ -34,5 +34,4 @@ export const getStockChart = (stockTicker: string, resolution: string) =>
     .get(
       `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${apiToken}`
     )
-    .then((response) => response.data)
-    .catch((error) => error.response.status);
+    .then((response) => response.data);

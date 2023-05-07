@@ -1,5 +1,5 @@
 "use client";
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent } from "react";
 import { css } from "@linaria/core";
 
 interface Props {
@@ -38,15 +38,22 @@ const inputContainer = css`
       border-color: rgb(30, 117, 216);
     }
 
-    @media (min-width: 1040px) {
+    @media (min-width: 1350px) {
       width: 300px;
+    }
+  }
+
+  input::placeholder {
+    font-size: 0.825rem;
+    @media (min-width: 360px) {
+      font-size: unset;
     }
   }
 
   .invalidText {
     font-size: 1.5rem;
-    line-height: 0.75rem;
-    color: red;
+    line-height: 1.35rem;
+    color: #db362d;
   }
 `;
 
