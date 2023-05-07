@@ -1,14 +1,12 @@
 "use client";
-import { ReactNode } from "react";
 import { css } from "@linaria/core";
 import { useEffect } from "react";
 
 interface Props {
   error?: Error;
-  children?: ReactNode;
 }
 
-const ErrorCard = ({ error, children }: Props) => {
+const ErrorCard = ({ error }: Props) => {
   useEffect(() => {
     console.error(error);
   }, [error]);

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint \"**/*.{ts,tsx}\" --fix"
   },
   "dependencies": {
     "@linaria/babel-preset": "^4.4.5",
@@ -29,6 +29,10 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/lodash.debounce": "^4.0.7"
+    "@types/lodash.debounce": "^4.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1"
   }
 }
