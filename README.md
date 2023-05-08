@@ -1,4 +1,4 @@
-This app showcases the capabilites of NextJs 13 combined with SWC, and utilizing the latest futures of React 18.
+This app showcases the capabilites of NextJs 13 combined with SWC, and utilizing the latest feautures of React 18.
 
 ## Getting Started
 
