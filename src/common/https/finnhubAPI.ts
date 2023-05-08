@@ -11,7 +11,7 @@ const finnHubClient = axios.create({
 export const getStocks = () =>
   finnHubClient
     .get<DetaildStock>(
-      `/stock/symbol?exchange=US&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
+      `/stock/symbol?exchange=US&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
     .then((response) => response.data)
     .catch((error) => error.response.status);
@@ -19,7 +19,7 @@ export const getStocks = () =>
 export const getStockQuote = (stockTicker: string) =>
   finnHubClient
     .get<StockQuote>(
-      `/quote?symbol=${stockTicker}&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
+      `/quote?symbol=${stockTicker}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
     .then((response) => response.data);
 
@@ -31,7 +31,7 @@ export const getStockChart = (stockTicker: string, resolution: string) => {
 
   return finnHubClient
     .get<StockCandle>(
-      `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${process.env.NEXT_PUBLIC__FINNHUB_API_TOKEN}`
+      `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
     .then((response) => response.data);
 };

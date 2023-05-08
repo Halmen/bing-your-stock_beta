@@ -52,7 +52,6 @@ const App = () => {
 
   const debouncedChangeHandler = useMemo(
     () => debounce(onButtonInput, 500),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -60,7 +59,6 @@ const App = () => {
     return () => {
       debouncedChangeHandler.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
