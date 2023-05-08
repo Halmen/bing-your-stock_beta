@@ -6,7 +6,7 @@ interface StockVerify {
   companyName?: string;
 }
 
-const urlBase = "http://localhost:3000/api";
+const urlBase = "/api";
 
 const NextApiClient = axios.create({
   baseURL: urlBase,
