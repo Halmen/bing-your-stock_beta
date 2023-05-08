@@ -13,7 +13,7 @@ export async function GET(request: NextApiRequest) {
     const data = await getStocks();
     if (typeof data === "number") {
       return NextResponse.json({
-        error: `Error status: ${data}, contact support`,
+        error: data,
       });
     } else if (data.length) {
       cachedStockList = [...data];
