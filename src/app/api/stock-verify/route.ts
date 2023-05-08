@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
 import { getStocks } from "@/common/https/finnhubAPI";
 import { DetaildStock } from "@/common/interfaces";
 
 let cachedStockList: DetaildStock[] = [];
 
-export async function GET(request: NextApiRequest) {
+export async function GET(request: Request) {
   const { url } = request;
   const tickerSymbol = url?.split("=").pop();
   let stockList: DetaildStock[] = [];
