@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DetaildStock, StockQuote, StockCandle } from "@/common/interfaces";
+import { DetailedStock, StockQuote, StockCandle } from "@/common/interfaces";
 
 const urlBase = "https://finnhub.io/api/v1";
 
@@ -10,7 +10,7 @@ const finnHubClient = axios.create({
 
 export const getStocks = () =>
   finnHubClient
-    .get<DetaildStock>(
+    .get<DetailedStock>(
       `/stock/symbol?exchange=US&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
     .then((response) => response.data)

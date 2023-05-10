@@ -3,7 +3,7 @@ export interface Stock {
   companyName: string;
 }
 
-export interface DetaildStock {
+export interface DetailedStock {
   currency: string;
   description: string;
   displaySymbol: string;

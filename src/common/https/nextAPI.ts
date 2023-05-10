@@ -13,7 +13,7 @@ const NextApiClient = axios.create({
   timeout: 3000,
 });
 
-export const verifyStock = (tickeSymbol: string) =>
-  NextApiClient.get<StockVerify>(`/stock-verify?ticker=${tickeSymbol}`)
+export const verifyStock = (tickerSymbol: string) =>
+  NextApiClient.get<StockVerify>(`/stock-verify?ticker=${tickerSymbol}`)
     .then((response) => response.data)
     .catch((error) => error?.response?.status || error);

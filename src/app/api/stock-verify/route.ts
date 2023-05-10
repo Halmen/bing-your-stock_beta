@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { getStocks } from "@/common/https/finnhubAPI";
-import { DetaildStock } from "@/common/interfaces";
+import { DetailedStock } from "@/common/interfaces";
 
-let cachedStockList: DetaildStock[] = [];
+let cachedStockList: DetailedStock[] = [];
 
 export async function GET(request: Request) {
   const { url } = request;
   const tickerSymbol = url?.split("=").pop();
-  let stockList: DetaildStock[] = [];
+  let stockList: DetailedStock[] = [];
   if (!cachedStockList.length) {
     const data = await getStocks();
     if (typeof data === "number") {
