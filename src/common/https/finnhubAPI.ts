@@ -25,9 +25,9 @@ export const getStockQuote = (stockTicker: string) =>
 
 export const getStockChart = (stockTicker: string, resolution: string) => {
   const date = new Date();
-  const currentTimestamp = date.getTime();
+  const currentTimestamp = Math.floor(date.getTime() / 1000);
   date.setFullYear(date.getFullYear() - 1);
-  const lastYearTimestamp = date.getTime();
+  const lastYearTimestamp = Math.floor(date.getTime() / 1000);
 
   return finnHubClient
     .get<StockCandle>(

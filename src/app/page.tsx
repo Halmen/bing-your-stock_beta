@@ -40,6 +40,7 @@ const App = () => {
           setTickerStatus(
             `Error status: ${data?.error || data}, contact support`
           );
+          setStockInfo(null);
         } else if (data?.displaySymbol && data?.companyName) {
           setStockInfo({
             displaySymbol: data.displaySymbol,
