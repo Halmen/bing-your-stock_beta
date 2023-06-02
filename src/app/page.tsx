@@ -18,6 +18,17 @@ import Chart from "@/components/Chart/Chart";
 import { verifyStock } from "@/common/https/nextAPI";
 import debounce from "lodash.debounce";
 
+const isKeyValid = (key: string) => {
+  const isLetterNumber = key.length == 1 && /^[A-Za-z0-9]*$/.test(key);
+  const isEnter = key === "Enter";
+  const isBackspace = key === "Backspace";
+
+  if (isLetterNumber || isBackspace || isEnter) {
+    return true;
+  }
+  return false;
+};
+
 const App = () => {
   const [tickerStatus, setTickerStatus] = useState("");
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
@@ -26,14 +37,10 @@ const App = () => {
     async (event: KeyboardEvent<HTMLInputElement>) => {
       const input = event.target as HTMLInputElement;
       const value = input.value;
-      const isLetterNumber =
-        event.key.length == 1 && /^[A-Za-z0-9]*$/.test(event.key);
-      const isEnter = event.key === "Enter";
-      const isBackspace = event.key === "Backspace";
       if (!value.length) {
         setTickerStatus("");
         setStockInfo(null);
-      } else if (isLetterNumber || isBackspace || isEnter) {
+      } else if (isKeyValid(event.key)) {
         setTickerStatus("Loading...");
         const data = await verifyStock(value.toUpperCase().trim());
         if (data?.error || typeof data === "number") {
