@@ -10,19 +10,17 @@ interface Props {
   dates: [Date, Date];
 }
 
-const DateRange = ({ onDateChange, dates }: Props) => {
-  return (
-    <div>
-      <DateRangePicker
-        onChange={(value) => onDateChange(value as [Date, Date])}
-        value={dates}
-        maxDate={new Date()}
-        clearIcon={null}
-        className={calendar}
-      />
-    </div>
-  );
-};
+const DateRange = ({ onDateChange, dates }: Props) => (
+  <div>
+    <DateRangePicker
+      onChange={(value) => onDateChange(value as [Date, Date])}
+      value={dates}
+      maxDate={new Date()}
+      clearIcon={null}
+      className={calendar}
+    />
+  </div>
+);
 
 const calendar = css`
   border: #0e03ab solid 2px;

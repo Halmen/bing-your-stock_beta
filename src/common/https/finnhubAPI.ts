@@ -1,5 +1,12 @@
 import axios from "axios";
-import { DetailedStock, StockQuote, StockCandle } from "@/common/interfaces";
+import {
+  StockQuoteSchema,
+  StockCandleSchema,
+  SymbolLookUpSchema,
+  StockQuoteModel,
+  StockCandleModel,
+  SymbolLookUpModel,
+} from "@/common/zodSchemas";
 
 const urlBase = "https://finnhub.io/api/v1";
 
@@ -8,30 +15,31 @@ const finnHubClient = axios.create({
   timeout: 3000,
 });
 
-export const getStocks = () =>
+export const getStockSymbolLookup = (searchSymbol: string) =>
   finnHubClient
-    .get<DetailedStock>(
-      `/stock/symbol?exchange=US&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
+    .get<SymbolLookUpModel>(
+      `/search?q=${searchSymbol}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
-    .then((response) => response.data)
-    .catch((error) => error.response.status);
+    .then((response) => SymbolLookUpSchema.parse(response.data))
+    .catch((error) => error);
 
 export const getStockQuote = (stockTicker: string) =>
   finnHubClient
-    .get<StockQuote>(
+    .get<StockQuoteModel>(
       `/quote?symbol=${stockTicker}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
-    .then((response) => response.data);
+    .then((response) => StockQuoteSchema.parse(response.data))
+    .catch((error) => error);
 
-export const getStockChart = (stockTicker: string, resolution: string) => {
-  const date = new Date();
-  const currentTimestamp = Math.floor(date.getTime() / 1000);
-  date.setFullYear(date.getFullYear() - 1);
-  const lastYearTimestamp = Math.floor(date.getTime() / 1000);
-
-  return finnHubClient
-    .get<StockCandle>(
-      `/stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
+export const getStockChart = (
+  stockTicker: string,
+  resolution: string,
+  lastYearTimestamp: number,
+  currentTimestamp: number
+) =>
+  finnHubClient
+    .get<StockCandleModel>(
+      `stock/candle?symbol=${stockTicker}&resolution=${resolution}&from=${lastYearTimestamp}&to=${currentTimestamp}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_TOKEN}`
     )
-    .then((response) => response.data);
-};
+    .then((response) => StockCandleSchema.parse(response.data))
+    .catch((error) => error);

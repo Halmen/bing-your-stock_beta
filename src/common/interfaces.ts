@@ -1,25 +1,6 @@
-export interface Stock {
+export interface Ticker {
   displaySymbol: string;
-  companyName: string;
-}
-
-export interface DetailedStock {
-  currency: string;
-  description: string;
-  displaySymbol: string;
-  figi: string;
-  mic: string;
-  symbol: string;
-  type: string;
-}
-
-export interface StockQuote {
-  c: number;
-  h: number;
-  l: number;
-  o: number;
-  pc: number;
-  t: number;
+  companyName?: string;
 }
 
 export interface StockCandle {

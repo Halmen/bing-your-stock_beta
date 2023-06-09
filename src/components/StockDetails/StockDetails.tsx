@@ -1,9 +1,10 @@
-import { Stock } from "@/common/interfaces";
-import useSWR from "swr";
+"use client";
+import { Ticker } from "@/common/interfaces";
 import { getStockQuote } from "@/common/https/finnhubAPI";
 import { css } from "@linaria/core";
+import useSWR from "swr";
 
-interface Props extends Stock {
+interface Props extends Ticker {
   currency?: string;
 }
 
@@ -35,17 +36,22 @@ const StockDetails = ({
       <div className={stockContainerCSS}>
         <div className="description">
           <p className="name">{companyName}</p>
-          <h2 className="currentPrice">{`${data?.c} ${currency}`}</h2>
+          <h2 className="currentPrice">
+            {data?.c
+              ? `${data.c} ${currency}`
+              : "You don't have access to this stock"}
+          </h2>
         </div>
         <div>
-          {["pc", "o", "h", "l"].map((stat: string) => (
-            <div className="stockValues" key={stat}>
-              <p className="key">{stats[stat as keyof typeof stats]}</p>
-              <p className="value">{`${
-                data[stat as keyof typeof data]
-              } ${currency}`}</p>
-            </div>
-          ))}
+          {data?.c &&
+            ["pc", "o", "h", "l"].map((stat: string) => (
+              <div className="stockValues" key={stat}>
+                <p className="key">{stats[stat as keyof typeof stats]}</p>
+                <p className="value">{`${
+                  data[stat as keyof typeof data]
+                } ${currency}`}</p>
+              </div>
+            ))}
         </div>
       </div>
     </>

@@ -8,22 +8,21 @@ interface Props {
   buttons: string[];
 }
 
-const Selector = ({ activeIndex = 0, onButtonClick, buttons = [] }: Props) => {
-  return (
-    <div className={selector}>
-      {buttons.map((name, index) => (
-        <button
-          key={name}
-          className={selectorButton}
-          onClick={() => onButtonClick(index)}
-          {...(index === activeIndex && { ["data-active"]: true })}
-        >
-          {name}
-        </button>
-      ))}
-    </div>
-  );
-};
+const Selector = ({ activeIndex = 0, onButtonClick, buttons = [] }: Props) => (
+  <div className={selector}>
+    {buttons.map((name, index) => (
+      <button
+        key={name}
+        className={selectorButton}
+        onClick={() => onButtonClick(index)}
+        {...(index === activeIndex && { ["data-active"]: true })}
+      >
+        {name}
+      </button>
+    ))}
+  </div>
+);
+
 const selector = css`
   border: #0e03ab solid 2px;
   min-width: 200px;
